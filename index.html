@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Six US polls comparing younger and older Republicans' views of Israel, 2019 to 2026.">
+<title>Republicans on Israel by Age</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one reading column; each figure is a plain band with hairline rules, charts built from HTML rows so they reflow on phones. */
+:root {
+  --bg: #f6f6f3; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #77756f;
+  --grid: #e1e0d9; --axis: #c3c2b7; --rule: rgba(11,11,11,0.10);
+  --young: #eb6834; --old: #2a78d6; --mid: #a3a19a;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --muted: #9a988f;
+  --grid: #2c2c2a; --axis: #45453f; --rule: rgba(255,255,255,0.10);
+  --young: #d95926; --old: #3987e5; --mid: #6f6d66; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --muted: #9a988f;
+  --grid: #2c2c2a; --axis: #45453f; --rule: rgba(255,255,255,0.10);
+  --young: #d95926; --old: #3987e5; --mid: #6f6d66; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 40px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 36px; }
+header { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink2); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5.4vw, 46px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; line-height: 1.2; margin: 0; text-wrap: balance; }
+.lede { font-size: 17px; color: var(--ink2); max-width: 64ch; margin: 0; }
+.lede strong { color: var(--ink); }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.fig-head { display: flex; flex-direction: column; gap: 4px; }
+.fig-sub { color: var(--ink2); margin: 0; max-width: 68ch; }
+figcaption { font-size: 13px; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink2); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.sw.young { background: var(--young); } .sw.old { background: var(--old); }
+.sw.mid { width: 3px; height: 13px; border-radius: 2px; background: var(--mid); }
+
+/* Dumbbell rows */
+.db { display: flex; flex-direction: column; }
+.db-row { display: grid; grid-template-columns: minmax(0, 36%) minmax(0, 1fr) 64px; column-gap: 18px; border-top: 1px solid var(--grid); }
+.db-row.axis { border-top: 1px solid var(--axis); }
+.db-label { padding-block: 14px; min-width: 0; }
+.db-q { font-weight: 500; line-height: 1.3; }
+.db-src { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+.db-track { position: relative; min-height: 64px; }
+.gl { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--grid); }
+.db-bar { position: absolute; top: calc(50% + 6px); height: 3px; margin-top: -1.5px; background: var(--axis); border-radius: 2px; }
+.dot { position: absolute; top: calc(50% + 6px); width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  border: 2px solid var(--surface); padding: 0; cursor: default; }
+.dot::after { content: ""; position: absolute; inset: -10px; }
+.dot.young { background: var(--young); } .dot.old { background: var(--old); }
+.dot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.dot .v { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tick-mid { position: absolute; top: calc(50% + 6px); width: 3px; height: 14px; margin: -7px 0 0 -1.5px; border-radius: 2px; background: var(--mid); padding: 0; border: 0; }
+.tick-mid::after { content: ""; position: absolute; inset: -8px -6px; }
+.db-gap { align-self: center; text-align: right; font-variant-numeric: tabular-nums; padding-top: 12px; }
+.db-gap b { font-family: var(--font-display); font-size: 20px; font-weight: 600; display: block; line-height: 1; }
+.db-gap small { font-size: 11.5px; color: var(--muted); }
+.axis .db-track { min-height: 26px; }
+.axis .tl { position: absolute; top: 6px; transform: translateX(-50%); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.axis .db-gap { padding-top: 6px; align-self: start; font-size: 12px; color: var(--muted); }
+@media (max-width: 620px) {
+  .db-row { grid-template-columns: minmax(0, 1fr) 54px; grid-template-areas: "label label" "track gap"; column-gap: 12px; }
+  .db-label { grid-area: label; padding-block: 12px 0; }
+  .db-track { grid-area: track; min-height: 52px; }
+  .db-gap { grid-area: gap; }
+  .axis .db-label { display: none; }
+  figure { padding: 18px 14px 14px; }
+}
+
+/* Bars */
+.bars { display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center; }
+.bar-year { font-variant-numeric: tabular-nums; color: var(--ink2); font-size: 14px; }
+.bar-track { position: relative; height: 30px; background: linear-gradient(to right, var(--grid) 1px, transparent 1px) 0 0 / 25% 100%; border-right: 1px solid var(--grid); }
+.bar { position: absolute; left: 0; top: 4px; bottom: 4px; background: var(--young); border-radius: 0 4px 4px 0; }
+.bar-v { position: absolute; top: 50%; transform: translateY(-50%); font-weight: 600; font-variant-numeric: tabular-nums; padding-left: 8px; white-space: nowrap; }
+.bar-axis { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; }
+.bar-axis div { position: relative; height: 18px; }
+.bar-axis span { position: absolute; transform: translateX(-50%); font-size: 12px; color: var(--muted); }
+
+/* Slope chart */
+.slope { width: 100%; max-width: 560px; height: auto; display: block; }
+.slope text { font-family: var(--font-body); fill: var(--ink); }
+.slope .m { fill: var(--muted); font-size: 12px; }
+.slope .s { fill: var(--ink2); font-size: 12.5px; }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+
+details { font-size: 14px; }
+summary { cursor: pointer; color: var(--ink2); font-weight: 500; }
+summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.tw { overflow-x: auto; margin-top: 10px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; min-width: 560px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+td.n { text-align: right; }
+.notes { display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; color: var(--ink2); max-width: 70ch; }
+.notes h2 { font-size: 17px; color: var(--ink); }
+.notes ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+.notes a { color: var(--ink); }
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 13px; line-height: 1.4;
+  padding: 7px 10px; border-radius: 5px; max-width: 260px; box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+#tip b { font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) { .bar { transition: width .5s ease; } }
+
+body { margin: 0; -webkit-text-size-adjust: 100%; }
+.switch { display: inline-flex; align-self: flex-start; gap: 2px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); font-size: 14px; }
+.switch a { padding: 6px 14px; border-radius: 999px; color: var(--ink2); text-decoration: none; font-weight: 500; }
+.switch a:hover { color: var(--ink); background: var(--grid); }
+.switch a[aria-current="page"] { background: var(--ink); color: var(--bg); }
+.switch a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="switch" aria-label="Switch chart"><a href="./" aria-current="page">United States</a><a href="uk.html">Great Britain</a></nav>
+  <header>
+    <div class="eyebrow">United States · Republicans and Republican-leaners</div>
+    <h1>Young Republicans are far cooler on Israel than older Republicans</h1>
+    <p class="lede">Six polls from 2024 to 2026 ask about Israel in different ways. In every one, younger Republicans are less pro-Israel than older Republicans, by <strong>14 to 40 points</strong>. On Pew's latest measure, only <strong>28%</strong> of Republicans aged 18–34 view the Israeli government favourably, against <strong>68%</strong> of those aged 50 and over.</p>
+  </header>
+
+  <figure aria-labelledby="f1t">
+    <div class="fig-head">
+      <h2 id="f1t">Pro-Israel views among Republicans, younger vs older</h2>
+      <p class="fig-sub">Share of Republicans giving the pro-Israel answer. Each poll uses its own age bands, shown under the question.</p>
+    </div>
+    <div class="legend">
+      <span><i class="sw young"></i>Younger Republicans</span>
+      <span><i class="sw old"></i>Older Republicans</span>
+      <span><i class="sw mid"></i>Middle age band, where published</span>
+    </div>
+    <div class="db" id="db1"></div>
+    <figcaption>The Northeastern row is an average warmth score out of 100, not a percentage. The gap column is older minus younger.</figcaption>
+  </figure>
+
+  <div class="two">
+    <figure aria-labelledby="f2t">
+      <div class="fig-head">
+        <h2 id="f2t">The age gap has tripled since 2019</h2>
+        <p class="fig-sub">Republicans with a favourable view of the Israeli people. Pew, 2019 and May 2026.</p>
+      </div>
+      <div class="legend">
+        <span><i class="sw young"></i>Aged 18–34</span>
+        <span><i class="sw old"></i>Aged 50+</span>
+      </div>
+      <svg class="slope" id="slope" viewBox="0 0 420 290" role="img" aria-label="Slope chart: Republicans aged 18 to 34 fell from 71% to 43% favourable towards the Israeli people between 2019 and 2026; those aged 50 and over went from 82% to 79%."></svg>
+    </figure>
+
+    <figure aria-labelledby="f3t">
+      <div class="fig-head">
+        <h2 id="f3t">Most Republicans under 50 now view Israel unfavourably</h2>
+        <p class="fig-sub">Republicans aged 18–49 with an unfavourable opinion of Israel. Pew, each March.</p>
+      </div>
+      <div class="bars" id="bars"></div>
+      <div class="bar-axis"><span></span><div id="baraxis"></div></div>
+      <figcaption>Pew did not publish a 50+ figure for this question. It says large majorities of older Republicans still view Israel favourably. All Republicans: 27% unfavourable in 2022, 37% in 2025, 41% in 2026.</figcaption>
+    </figure>
+  </div>
+
+  <details>
+    <summary>Show all the numbers</summary>
+    <div class="tw"><table>
+      <thead><tr><th>Poll</th><th>Measure</th><th>Younger</th><th class="n">%</th><th>Older</th><th class="n">%</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table></div>
+  </details>
+
+  <section class="notes">
+    <h2>Notes and sources</h2>
+    <ul>
+      <li>All groups are Republicans plus independents who lean Republican, except the JCFA survey (self-identified Republicans) and Northeastern (Republican identifiers).</li>
+      <li>The JCFA survey was run by two pro-Israel advocacy authors and doesn't name its pollster. Treat it as weaker than the others.</li>
+      <li>The University of Maryland figures come from the university's own summary and news reports of it. The poll's PDF would not load.</li>
+      <li><a href="https://www.pewresearch.org/short-reads/2026/10/16/republicans-views-of-some-countries-and-international-organizations-differ-widely-by-age/">Pew, Oct 2026: Republicans' views of countries by age</a> (survey 4–17 May 2026)</li>
+      <li><a href="https://www.pewresearch.org/short-reads/2026/07/09/americans-views-of-israelis-have-grown-increasingly-negative-but-views-of-palestinians-have-held-fairly-steady/">Pew, Jul 2026: views of Israelis and Palestinians</a> (n=12,574)</li>
+      <li><a href="https://www.pewresearch.org/short-reads/2026/04/07/negative-views-of-israel-netanyahu-continue-to-rise-among-americans-especially-young-people/">Pew, Apr 2026: views of Israel and Netanyahu</a> (survey 23–29 Mar 2026, n=3,507)</li>
+      <li><a href="https://www.pewresearch.org/short-reads/2025/04/08/how-americans-view-israel-and-the-israel-hamas-war-at-the-start-of-trumps-second-term/">Pew, Apr 2025</a> (survey 24–30 Mar 2025, n=3,605)</li>
+      <li><a href="https://criticalissues.umd.edu/feature/young-republicans-and-evangelicals-are-much-less-sympathetic-israel-older-ones-why">University of Maryland Critical Issues Poll, Aug 2025</a></li>
+      <li><a href="https://jcfa.org/probing-republican-sentiment-toward-israel-jews-and-a-media-personality-candidacy/">JCFA, Feb 2026</a> (561 Republicans, 21–22 Jan 2026)</li>
+      <li><a href="https://news.northeastern.edu/2024/02/23/americans-views-israel">Northeastern University 50-state survey</a> (30,460 adults, Dec 2023–Jan 2024)</li>
+    </ul>
+  </section>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const ROWS = [
+  { q: "View the Israeli government favourably", src: "Pew Research Center · May 2026", y: ["18–34", 28], o: ["50+", 68], mid: [["35–49", 41]] },
+  { q: "View the Israeli people favourably", src: "Pew Research Center · May 2026", y: ["18–34", 43], o: ["50+", 79], mid: [["35–49", 57]] },
+  { q: "Have confidence in Netanyahu on world affairs", src: "Pew Research Center · March 2026", y: ["18–49", 30], o: ["50+", 58] },
+  { q: "Sympathise more with Israelis than Palestinians", src: "University of Maryland · August 2025", y: ["18–34", 24], o: ["35+", 52] },
+  { q: "Say it's very or extremely important for Republicans to support Israel", src: "JCFA survey · January 2026", y: ["18–44", 55], o: ["45+", 69] },
+  { q: "Warmth towards Israel, score out of 100", src: "Northeastern University · Dec 2023–Jan 2024", y: ["18–24", 49], o: ["65+", 72], score: true }
+];
+
+const tip = document.getElementById("tip");
+function place(el) {
+  const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect();
+  let x = r.left + r.width / 2 - t.width / 2;
+  x = Math.max(8, Math.min(x, innerWidth - t.width - 8));
+  let y = r.top - t.height - 10; if (y < 8) y = r.bottom + 10;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function bindTip(el, html) {
+  const show = () => { tip.innerHTML = html; tip.hidden = false; place(el); };
+  const hide = () => { tip.hidden = true; };
+  el.addEventListener("mouseenter", show); el.addEventListener("mouseleave", hide);
+  el.addEventListener("focus", show); el.addEventListener("blur", hide);
+}
+const unit = (r, v) => r.score ? v + "/100" : v + "%";
+
+function dumbbell(host, rows) {
+  rows.forEach(r => {
+    const row = document.createElement("div"); row.className = "db-row";
+    const lo = Math.min(r.y[1], r.o[1]), hi = Math.max(r.y[1], r.o[1]);
+    row.innerHTML = `<div class="db-label"><div class="db-q">${r.q}</div><div class="db-src">${r.src} · ages ${r.y[0]} vs ${r.o[0]}</div></div>
+      <div class="db-track">${[0,25,50,75,100].map(v => `<i class="gl" style="left:${v}%"></i>`).join("")}
+      <i class="db-bar" style="left:${lo}%;width:${hi - lo}%"></i></div>
+      <div class="db-gap"><b>${r.o[1] - r.y[1]}</b><small>pts gap</small></div>`;
+    const track = row.querySelector(".db-track");
+    (r.mid || []).forEach(([age, v]) => {
+      const m = document.createElement("button"); m.className = "tick-mid"; m.style.left = v + "%";
+      m.setAttribute("aria-label", `Ages ${age}: ${unit(r, v)}`);
+      bindTip(m, `<b>Ages ${age}: ${unit(r, v)}</b><br>${r.q}`); track.appendChild(m);
+    });
+    [["young", r.y], ["old", r.o]].forEach(([cls, [age, v]]) => {
+      const d = document.createElement("button"); d.className = "dot " + cls; d.style.left = v + "%";
+      d.setAttribute("aria-label", `${cls === "young" ? "Younger" : "Older"} Republicans, ages ${age}: ${unit(r, v)}`);
+      d.innerHTML = `<span class="v">${unit(r, v)}</span>`;
+      bindTip(d, `<b>Republicans aged ${age}: ${unit(r, v)}</b><br>${r.q}<br>${r.src}`); track.appendChild(d);
+    });
+    host.appendChild(row);
+  });
+  const ax = document.createElement("div"); ax.className = "db-row axis";
+  ax.innerHTML = `<div class="db-label"></div><div class="db-track">${[0,25,50,75,100].map(v => `<span class="tl" style="left:${v}%">${v}${v === 100 ? "%" : ""}</span>`).join("")}</div><div class="db-gap">Gap</div>`;
+  host.appendChild(ax);
+}
+dumbbell(document.getElementById("db1"), ROWS);
+
+// Slope chart
+(function () {
+  const svg = document.getElementById("slope"), NS = "http://www.w3.org/2000/svg";
+  const x0 = 110, x1 = 300, y = v => 250 - (v - 30) / 60 * 215;
+  const el = (n, a, t) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (t != null) e.textContent = t; svg.appendChild(e); return e; };
+  [30, 50, 70, 90].forEach(v => { el("line", { x1: x0, x2: x1, y1: y(v), y2: y(v), stroke: "var(--grid)", "stroke-width": 1 }); });
+  el("line", { x1: x0, x2: x0, y1: y(90) - 6, y2: y(30), stroke: "var(--axis)" });
+  el("line", { x1: x1, x2: x1, y1: y(90) - 6, y2: y(30), stroke: "var(--axis)" });
+  el("text", { x: x0, y: 274, "text-anchor": "middle", class: "s" }, "2019");
+  el("text", { x: x1, y: 274, "text-anchor": "middle", class: "s" }, "2026");
+  const series = [
+    { c: "var(--old)", a: 82, b: 79, n: "50+", age0: "50+", age1: "50+" },
+    { c: "var(--young)", a: 71, b: 43, n: "18–34", age0: "under 35", age1: "18–34" }
+  ];
+  series.forEach(s => {
+    el("line", { x1: x0, y1: y(s.a), x2: x1, y2: y(s.b), stroke: s.c, "stroke-width": 2.5, "stroke-linecap": "round" });
+    [[x0, s.a, "2019", s.age0], [x1, s.b, "2026", s.age1]].forEach(([cx, v, yr, age]) => {
+      el("circle", { cx, cy: y(v), r: 6, fill: s.c, stroke: "var(--surface)", "stroke-width": 2 });
+      const hit = el("circle", { cx, cy: y(v), r: 14, fill: "transparent", tabindex: 0, "aria-label": `${yr}, Republicans ${age}: ${v}%` });
+      bindTip(hit, `<b>${yr} · Republicans ${age}: ${v}%</b><br>Favourable view of the Israeli people`);
+    });
+    el("text", { x: x0 - 12, y: y(s.a) + 5, "text-anchor": "end", "font-weight": 600, "font-size": 14 }, s.a + "%");
+    el("text", { x: x1 + 12, y: y(s.b) + 5, "font-weight": 600, "font-size": 14 }, s.b + "%");
+  });
+  el("text", { x: x0 - 12, y: y(76.5) + 4, "text-anchor": "end", class: "m" }, "gap 11");
+  el("text", { x: x1 + 12, y: y(61) + 4, class: "m" }, "gap 36");
+})();
+
+// Bars
+(function () {
+  const data = [["2022", 35], ["2025", 50], ["2026", 57]];
+  const host = document.getElementById("bars");
+  data.forEach(([yr, v]) => {
+    const r = document.createElement("div"); r.className = "bar-row";
+    r.innerHTML = `<div class="bar-year">${yr}</div><div class="bar-track" tabindex="0" aria-label="${yr}: ${v}% unfavourable"><i class="bar" style="width:${v}%"></i><span class="bar-v" style="left:${v}%">${v}%</span></div>`;
+    bindTip(r.querySelector(".bar-track"), `<b>${yr}: ${v}% unfavourable</b><br>Republicans aged 18–49, Pew`);
+    host.appendChild(r);
+  });
+  document.getElementById("baraxis").innerHTML = [0,25,50,75,100].map(v => `<span style="left:${v}%">${v}${v === 100 ? "%" : ""}</span>`).join("");
+})();
+
+// Table
+document.getElementById("tbody").innerHTML = [
+  ...ROWS.map(r => [r.src, r.q, r.y[0], unit(r, r.y[1]), r.o[0], unit(r, r.o[1])]),
+  ["Pew Research Center · 2019", "View the Israeli people favourably", "Under 35", "71%", "50+", "82%"],
+  ["Pew Research Center · Mar 2022", "Unfavourable view of Israel", "18–49", "35%", "50+", "not published"],
+  ["Pew Research Center · Mar 2025", "Unfavourable view of Israel", "18–49", "50%", "50+", "not published"],
+  ["Pew Research Center · Mar 2026", "Unfavourable view of Israel", "18–49", "57%", "50+", "not published"]
+].map(c => `<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td><td class="n">${c[3]}</td><td>${c[4]}</td><td class="n">${c[5]}</td></tr>`).join("");
+</script>
+
+</body>
+</html>
